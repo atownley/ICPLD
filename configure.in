@@ -1,0 +1,173 @@
+dnl Process this file with autoconf to produce a configure script.
+dnl Created by Anjuta - will be overwritten
+dnl If you don't want it to overwrite it,
+dnl 	Please disable it in the Anjuta project configuration
+
+AC_INIT([icpld],[1.1.5],[erik@ibiblio.org],[icpld])
+AM_INIT_AUTOMAKE(icpld-1.1.5, 1.1.5)
+AM_CONFIG_HEADER(config.h)
+
+AC_ISC_POSIX
+AC_PROG_CXX
+AM_PROG_CC_STDC++
+AC_HEADER_STDC++
+AM_PROG_LIBTOOL
+
+AC_DEFINE([PACKAGE_DATA_DIR], [$PACKAGE_DATA_DIR], [Trams])
+AC_DEFINE([PACKAGE_DOC_DIR], [$PACKAGE_DOC_DIR], [Trams])
+AC_DEFINE([PACKAGE_HELP_DIR], [$PACKAGE_HELP_DIR], [Trams])
+AC_DEFINE([PACKAGE_MENU_DIR], [$PACKAGE_MENU_DIR], [Trams])
+AC_DEFINE([PACKAGE_PIXMAPS_DIR], [$PACKAGE_PIXMAPS_DIR], [Trams])
+AC_DEFINE([PACKAGE_SOURCE_DIR], [$PACKAGE_SOURCE_DIR], [Trams])
+
+dnl Checks for programs.
+dnl Checks for libraries.
+
+dnl Checks for header files.
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+dnl Checks for library functions.
+dnl Checks for Additional stuffs.
+
+dnl Set PACKAGE SOURCE DIR in config.h.
+packagesrcdir=`cd $srcdir && pwd`
+
+dnl Set PACKAGE PREFIX
+if test "x${prefix}" = "xNONE"; then
+  packageprefix=${ac_default_prefix}
+else
+  packageprefix=${prefix}
+fi
+
+# we may rely on ping later, so check it first.
+AC_CHECK_PROG(PING,ping,ping)
+if test "x$PING" = ""; then
+AC_MSG_ERROR([Could not find ping in your $PATH])
+fi
+
+AC_ARG_ENABLE(ipv6,
+ AC_HELP_STRING([--disable-ipv6],[disable IPv6 support]),
+ [case "${enableval}" in
+   yes) want_ipv6=yes ;;
+    no) want_ipv6=no ;;
+     *) AC_MSG_ERROR(bad value ${enableval} for --enable-ipv6) ;;
+  esac],[want_ipv6=yes])
+
+icpld_cv_type_in6_addr=no
+
+
+if test "x$want_ipv6" = "xyes"; then
+	AC_MSG_CHECKING([for IPv6])
+	AC_TRY_COMPILE([
+		 #include <sys/types.h>
+		 #include <sys/socket.h>
+		 #include <netinet/in.h>
+		 #include <netdb.h>
+		 #include <arpa/inet.h>],
+		[struct in6_addr i;],
+		[icpld_cv_type_in6_addr=yes])
+	AC_MSG_RESULT([$icpld_cv_type_in6_addr])
+	if test "$icpld_cv_type_in6_addr" = "yes"; then
+		AC_DEFINE([HAVE_IPV6], [1], [Whether to include IPv6 support])
+		# Find ping6
+		# NOTE:  Do not call PING6 unless HAVE_IPV6.
+		# FIXME: If you know how to test that "ping -A inet6" actually
+		#        works on this kind of system (without relying on IPv6
+		#        being configured on the build system), please tell us.
+		# User can override with ./configure PING6="/foo/bar -6"
+		AC_ARG_VAR([PING6],[IPv6 ping6 or equivalent command])
+		if test "x$PING6" = "x"; then
+			AC_CHECK_PROG([PING6],[ping6],[ping6],[ping -A inet6])
+		fi
+		AC_DEFINE_UNQUOTED([PING6], ["${PING6}"], [How to call an IPv6 ping using the shell])
+	else
+		PING6=false # !HAVE_IPV6, so let PING6 fail
+	fi
+	AC_SUBST([PING6])
+fi
+AM_CONDITIONAL([HAVE_IPV6], [test "$icpld_cv_type_in6_addr" = "yes"])
+
+
+# Hmm... why not use AC_CANONICAL_HOST somewhere and then do
+# a case "$host_alias" in ... esac ?
+systemtype=`uname -s`
+if test "x$systemtype" = "xSunOS"; then
+AC_DEFINE([SOLARIS], [], [Wheter to build icpld for solaris or not])
+LDFLAGS="$oLDFLAGS -lsocket -lnsl -lresolv"
+fi
+if test "x$systemtype" = "xLinux"; then
+AC_DEFINE([LINUX], [], [Wheter to build icpld for Linux or not])
+fi
+if test "x$systemtype" = "xFreeBSD"; then
+AC_DEFINE([FREEBSD], [], [Wheter to build icpld for FreeBSD or not])
+fi
+if test "x$systemtype" = "xNetBSD"; then
+AC_DEFINE([NETBSD], [], [Wheter to build icpld for NetBSD or not])
+fi
+if test "x$systemtype" = "xOpenBSD"; then
+AC_DEFINE([OPENBSD], [], [Wheter to build icpld for OpenBSD or not])
+fi
+if test "x$systemtype" = "xDarwin"; then
+AC_DEFINE([DARWIN], [], [Wheter to build icpld for Darwin or not])
+fi
+
+
+
+echo 
+echo
+echo "Building with IPv6 support . : $want_ipv6"
+echo "Building icpld for . : $systemtype"
+echo
+echo
+dnl Set PACKAGE DATA & DOC DIR
+packagedatadir=share/${PACKAGE}
+packagedocdir=doc/${PACKAGE}
+packagemandir=man/man1/
+
+dnl Set PACKAGE DIRS in config.h.
+packagepixmapsdir=${packagedatadir}/pixmaps
+packagehelpdir=${packagedatadir}/help
+packagemenudir=${packagedatadir}
+
+dnl Subst PACKAGE_DATA_DIR.
+NO_PREFIX_PACKAGE_DATA_DIR="${packagedatadir}"
+AC_SUBST(NO_PREFIX_PACKAGE_DATA_DIR)
+PACKAGE_DATA_DIR="${packageprefix}/${packagedatadir}"
+AC_SUBST(PACKAGE_DATA_DIR)
+
+dnl Subst PACKAGE_DOC_DIR.
+NO_PREFIX_PACKAGE_DOC_DIR="${packagedocdir}"
+AC_SUBST(NO_PREFIX_PACKAGE_DOC_DIR)
+PACKAGE_DOC_DIR="${packageprefix}/${packagedocdir}"
+AC_SUBST(PACKAGE_DOC_DIR)
+
+dnl Subst PACKAGE_PIXMAPS_DIR.
+NO_PREFIX_PACKAGE_PIXMAPS_DIR="${packagepixmapsdir}"
+AC_SUBST(NO_PREFIX_PACKAGE_PIXMAPS_DIR)
+PACKAGE_PIXMAPS_DIR="${packageprefix}/${packagepixmapsdir}"
+AC_SUBST(PACKAGE_PIXMAPS_DIR)
+
+dnl Subst PACKAGE_HELP_DIR.
+NO_PREFIX_PACKAGE_HELP_DIR="${packagehelpdir}"
+AC_SUBST(NO_PREFIX_PACKAGE_HELP_DIR)
+PACKAGE_HELP_DIR="${packageprefix}/${packagehelpdir}"
+AC_SUBST(PACKAGE_HELP_DIR)
+
+dnl Subst PACKAGE_MENU_DIR.
+NO_PREFIX_PACKAGE_MENU_DIR="${packagemenudir}"
+AC_SUBST(NO_PREFIX_PACKAGE_MENU_DIR)
+PACKAGE_MENU_DIR="${packageprefix}/${packagemenudir}"
+AC_SUBST(PACKAGE_MENU_DIR)
+
+AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${packageprefix}/${packagedatadir}")
+AC_DEFINE_UNQUOTED(PACKAGE_DOC_DIR, "${packageprefix}/${packagedocdir}")
+AC_DEFINE_UNQUOTED(PACKAGE_PIXMAPS_DIR, "${packageprefix}/${packagepixmapsdir}")
+AC_DEFINE_UNQUOTED(PACKAGE_HELP_DIR, "${packageprefix}/${packagehelpdir}")
+AC_DEFINE_UNQUOTED(PACKAGE_MENU_DIR, "${packageprefix}/${packagemenudir}")
+AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
+
+AC_OUTPUT([
+Makefile
+src/Makefile
+])
+

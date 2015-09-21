@@ -1,0 +1,92 @@
+#!/bin/bash
+# 
+# TESTED AND FOUND TO BE WORKING ON SUSE LINUX 9.3
+#
+# Author Program : Erik Ljungström <http://icpld.northernmost.org/>
+# Author Script: Luksch, Klaus-J <cyberclaus[AT]gmx[DOT]net>
+#
+# icpld init script  =  /etc/init.d/icpld and its symbolic link
+#
+#
+# $Id: icpld.init,v 1.0 2006/04/27 09:39:03 LIC Exp $
+
+### BEGIN INIT INFO
+# Provides:	 	icpld
+# Required-Start:	
+# Should-Start:		
+# Required-Stop:	
+# Default-Start:	3 5
+# Default-Stop:		0 1 2 6
+# Short-Description:	"checks the internet connections and reports failure (and success) in logfiles"
+# Description:		"ICPLD is a connection monitor which allows you to keep track
+#	of your network connection perfomance. It will log each occasion of broken networking.
+#	It runs as a background process, and sends ICMP requests to an ip of your choice. When
+#	a reply isn't received within proper amount of time, it will consider the connection as
+#	unavailable and put a stamp in its log.
+### END INIT INFO
+
+# Shell functions sourced from /etc/rc.status:
+#      rc_check         check and set local and overall rc status
+#      rc_status        check and set local and overall rc status
+#      rc_status -v     ditto but be verbose in local rc status
+#      rc_status -v -r  ditto and clear the local rc status
+#      rc_status -s     display "skipped" and exit with status 3
+#      rc_status -u     display "unused" and exit with status 3
+#      rc_failed        set local and overall rc status to failed
+#      rc_failed <num>  set local and overall rc status to <num>
+#      rc_reset         clear local rc status (overall remains)
+#      rc_exit          exit appropriate to overall rc status
+#      rc_active	checks whether a service is activated by symlinks
+#      rc_splash arg    sets the boot splash screen to arg (if active)
+. /etc/rc.status
+rc_reset
+
+# Return values acc. to LSB for all commands but status:
+# 0 - success
+# 1 - generic or unspecified error
+# 2 - invalid or excess argument(s)
+# 3 - unimplemented feature (e.g. "reload")
+# 4 - insufficient privilege
+# 5 - program is not installed
+# 6 - program is not configured
+# 7 - program is not running
+
+
+NAME=icpld
+EXEC=/usr/local/bin/icpld
+CONFIG=/usr/local/etc/icpld.conf
+STARTPARAM="-s"
+STOPPARAM="-s -quit"
+# STOPPARAM not used here
+
+[ -x $EXEC ] || exit 0
+[ -f $CONFIG ] || exit 6
+
+
+case "$1" in
+	start)
+		echo -n "Starting $NAME:"
+		startproc $EXEC $STARTPARAM
+		rc_status
+		rc_status -v
+		;;
+	stop)
+
+		echo -n "Stopping $NAME:"
+		killproc -TERM $EXEC
+		rc_status
+		rc_status -v
+		;;
+	status)
+		echo -n "Checking $NAME"
+		checkproc $EXEC
+		rc_status
+		rc_status -v
+		;;
+	*)
+		echo "Usage: $0 {start|stop|status}" >&2
+		exit 2
+		;;
+esac
+
+exit 0

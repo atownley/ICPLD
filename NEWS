@@ -1,0 +1,132 @@
+News in 1.1.5 from 1.1.4
+	
+	Fixed compilation warning due to recently deprecated struct (gcc 4.2)
+	IPv6 support is now enabled by default. Override with --disable-ipv6
+
+News in 1.1.4 from 1.1.3
+	
+	Two new init scripts in the contrib/ dir, thanks to Klaus-J and 
+	anonymous guy
+
+News in 1.1.3 from 1.1.1
+
+	The -err and -err6 options added. These options displays the 
+	contents of the error log (set by the errfile setting in the 
+	configuration file, or at command line with the -errfile option).
+	Much like the -log option. Basically -err and -err6 is cat ~/.icpld/errors
+	but much... *much* cooler.
+
+News in 1.1.1 from 1.1.0
+
+	Due to popular demand, this version introduces the 
+	-errfile and -errfile6 options.
+	These arguments can be used to set the file to which icpld
+	will write the output of any failing ping sequence. Good 
+	for network debugging I suppose.
+	It also introduces the -iface switch, which allows you to 
+	specify which network interface or (on some platforms, linux 
+	included) source address to use for the checking.
+ 
+News in 1.1.0 from 1.0.9
+	
+	This version introduces the -detach option, which will
+	send SIGUSR1 to an icpld process which is running in the 
+	foreground (-nd), upon which it will detach itself and 
+	daemonize
+	
+News in 1.0.9 from 1.0.8
+
+	Version 1.0.8 was released, but never announced,
+	as a quick fix for MacOSX users, this is a brushed up
+	version of that quick fix.
+
+	This release also fixes the discomfort of having to 
+	fake a ping6 binary for solaris users. This tanks to
+	a rewrite of parts of configure.in (Thanks to Hans Ulrich Niedermann)
+ 
+News in 1.0.8 from 1.0.6
+	
+	MacOSX is back as a supported platform!
+	
+News in 1.0.6 from 1.0.5
+
+	No news, only polishing and bug fixing.	
+
+
+News in 1.0.5 from 1.0.0
+	
+	The -turn function has been tuned a notch. It now mimics the
+	well known logrotate behaviour and renames the log file to 
+	log.0, log.1 etc, ie. it does not overwrite the previously 
+	turned log anymore
+
+News in 1.0.0 from 0.6.3
+	
+	icpld -quit now removes the pid-file, even if there
+	is no process running (ie. the box has crashed)
+
+	It works with Solaris again. See ChangeLog for more
+	details on this	
+
+	Apart from that, some final cleaning, icpld is
+	now to be considered stable.
+
+News in 0.6.3 from 0.6.1
+	
+	When issuing icpld -log, the result is the same as if 
+	you piped the output through 'more'. This can however, be overridden
+	with the -m switch, which gives the old behaviour. 
+	
+	This version also introduces the cmd4up and cmd4dn (and IPv6
+	equivalent), which is user defined commands that will be executed
+	when a connection goes up or down. These options may only be set
+	using the configuration file. See icpld.conf.sample or manpage for
+	further information on these variables
+
+	As of this version, icpld also fully supports MacOS X
+
+News in 0.6.1 from 0.6.0
+	
+	This release fixes a few small, mostly cosmetic
+	related bugs, which has had virtually no impact what
+	so ever on the user. There has also been some code
+	clean ups and rewrites done in this release. Mainly
+	this release can be seen as a fixup for the small,
+	yet there, "bugs" introduced with the IPv6 implementation
+	
+	The main issue for this release is the timing bug with IPv6
+	and the compilation error under Solaris.
+
+News in 0.6.0 from 0.5.4
+	
+	IPv6-support. Configure icpld with the --enable-ip6
+	flag and see manpage for further info
+
+	The -s flag is also available in connection with -quit
+	In other words, icpld can now exit silently as well
+	
+	Automated detection of system platform
+
+	As of this release, icpld also accepts hosts, not just ip
+	addresses. However, you should bear in mind that a failure
+	in resolving the hostname will be considered a lost link
+
+News in 0.5.2 from 0.4.5 (No news in 0.5.0)
+	
+	Added the -s flag which stands for silent, which is particulary
+	handy when you want to suppress output when starting from the
+	startup-script.
+	
+	As from 0.5.0, icpld is also available as a FreeBSD port. 
+	See /usr/ports/net/icpld.
+
+News in 0.4.5 from 0.4.0
+
+	This release is merely a bugfix (more than needed), and 
+	does not implement any new features but the -pint option.	
+	The code is severely cleaned up and reorganized and does
+	no longer give the impression of an outgrown "hello world"-program.
+
+So, what's new then?
+	Less bugs? See ChangeLog for further info on this.
+	Updated manpage

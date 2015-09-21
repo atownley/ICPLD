@@ -1,0 +1,356 @@
+.TH "icpld" "1" "1.1.5" "Erik Ljungstrom" "Internet daemons"
+.SH "NAME"
+.LP 
+icpld \- Internet Connection Performance Logging Daemon
+      
+.SH "SYNOPSIS"
+.LP 
+icpld \-ip <ip> [OPTIONS]
+
+or
+
+icpld \-ip6 <ip> [OPTIONS]
+
+alternatively a mixture of both
+.SH "DESCRIPTION"
+.LP 
+icpld forks into the background and checks for downtime in a network connection.
+
+You can set it to try against any ip, either on the internet, or on your local
+network in different intervals. As from version 0.6.0 icpld also supports IPv6 
+addresses.
+
+ICPLD can monitor two connection at once, one IPv4 connection, and an IPv6 one.
+You can also limit the use to one connection only, by not specifying an ip.
+If you only want to monitor an IPv6 connection, you simply do not specify an 
+IPv4 ip. In case you have both an IPv4 and an IPv6 ip specified in the configuration
+file, you may override this by specifying the \-4 or the \-6 switch. Giving one of these
+tells icpld to \fBonly\fR monitor this. Hence \-6 only monitors an IPv6 connection, even
+though there is an IPv4 ip specified in the configuration file.
+
+As the name implies, icpld writes a log as it is running. This logfile is 
+by default located in ~/.icpld and is called 'log'. If you want to specify 
+another location for your logfile, you can do this by either edit the post
+\fBlogFile\fR in the configuration file, or specify one using the \-logfile
+option. Normally, when you monitor two connections, they are both logged into 
+this default file, but you can however specify a special log file for your IPv6
+connection, using the \-logfile6 switch.
+
+See below for more options
+.SH "OPTIONS"
+.LP 
+  Note that some of these options are only available when
+  icpld has been compiled with IPv6 support. 
+.TP 
+.B \-h, \-\-help
+Shows the help section and exits
+.B \-ip
+This switch is required unless there is an 
+IPv6 address specified, and decides which ip               
+ICPLD will probe for ICMP replies
+.TP 
+.B \-ip6
+This specifies which IPv6 ip icpld will probe
+for ICMP replies. This is optional unless the 
+\-6 switch is used. Note that the use of one, does
+not exclude the other. In other words; you can
+monitor both an IPv6 and an IPv4 connection 
+with the same icpld process
+.TP 
+.B \-fbip
+Fallback ip. This is the ip ICPLD will double 
+check against if the ip specified with \-ip 
+is not responding
+.TP 
+.B \-fbip6
+Same as fbip, but for the IPv6 monitoring.
+.TP 
+.B \-detach
+Giving this argument to icpld will daemonize a process that is currently running
+in the foreground. Useful if you want to monitor icpld for a while, and then
+fork it without having to restart icpld and "pollute" the log files
+.TP 
+.B \-6
+This option will tell icpld to use IPv6 only. Mainly used to ignore IPv4 entries in 
+the configuration file
+.TP 
+.B \-4
+This option is used to ignore IPv6 entries in the configuration file
+.TP 
+.B \-nd
+Prevent ICPLD from daemonizing
+.TP 
+.B \-d
+Force ICPLD to damonize (this is default, but can 
+be used to override a configuration file setting)
+.TP 
+.B \-s
+Silent. Produces no output what so ever. Has no 
+effect in combination  with \-nd (naturally)
+.TP 
+.B \-m
+This option is only useful in combination with \-logfile at which point \-m tells icpld to output
+the whole logfile at once, without breaks. Virtually the same as cat ~/.icpld/log
+.TP 
+.B \-status
+Shows the current state of icpld and the connection
+.TP 
+.B \-log
+Displays the performance log 
+.TP 
+.B \-turn       
+Turns the log file over. Old one is saved as ~/.icpld/log.\fBn\fR where \fBn\fR is 
+the next available number. A stamp is put in the new log, telling you when it was turned
+.TP 
+.B \-reset      
+Resets ICPLD state and log and quit a current ICPLD process
+.TP 
+.B \-quit        
+Terminates a running ICPLD process. Use this at all times, rather than sending signals manually
+.TP 
+.B \-interval 
+Sets the interval in which ICPLD will check for an 
+available connection (default 10 seconds)
+.TP 
+.B \-dinterval
+Sets the interval with which icpld will check for an available connection, once it has been marked 
+as unavailable. Will override \-interval in case of downtime. The default is 6 seconds 
+.TP 
+.B \-pint
+Tells icpld how frequent it should send ICMP\-packets once it is in a checking cycle. This
+option is equivalent to ping \-i <double> and should not be confused with \fB\-interval\fR
+Default is one packet per second
+.TP 
+.B \-nobeep
+Do not generate a beep when the connection comes back up (beeping is only activated when combined 
+with the \-nd switch)
+.TP 
+.B \-logfile
+Specifies which logfile to use rather than the default ~/.icpld/log Note that this has an impact 
+on \-log as well as \-turn, if you use icpld with different \-log options. A log which is located in 
+another place than what \-logfile says, will not be turned.
+.TP 
+.B \-logfile6
+Same as above, but for the IPv6 log. Note that the same file can be used for both connections.
+.TP 
+.B \-htmlfile
+ICPLD can, if you want, duplicate the log file into HTML format. This switch tells ICPLD where 
+to put the html output.
+.TP 
+.B \-htmlfile6
+Same as above, but for the duplication of the IPv6 log either specified by \-logfile6 or within
+the configuration file
+.TP 
+.B \-errfile
+This option tells icpld where to save the log which contains the output of ping. The output
+is only written if the ping failed. This is useful for debugging since you can not only see when
+the connection was broken, but also what caused the downtime.
+.TP 
+.B \-errfile6
+Same as the above, but for the IPv6 connection
+.TP 
+.B \-err
+Displays the contents of the errors file (default: ~/.icpld/errors) 
+.TP 
+.B \-err6
+Same as the above, but for the IPv6 errors file
+.TP 
+.B \-config
+Specifies which config file to use. The default is /usr/local/etc/icpld.conf Usage of the config 
+file at all is optional as ICPLD can be operated throughoutly by command line as well.
+.TP 
+.B \-iface
+Specifies which source interface or (on some platforms) address to use for the checking
+.TP 
+.B \-v, \-\-version   
+Display version info and exits
+.SH "CONFIG FILE"
+ICPLD automatically looks for a configuration file in /usr/local/etc/icpld.conf
+If none is to be found, it will use the command line
+arguments, hence the configuration file is not necessary, but
+may be handy and helpful.
+
+The location of the config file may be altered by supplying the
+\-config switch at command line.
+
+Note that all command line arguments overrides the values in the configuration file.
+
+Available config options:
+
+.Sp 
+.TP 
+.B ip
+This is the target machine, which we will try to establish 
+contact with
+.br 
+Example: ip=192.168.0.1
+.TP 
+.B ip6
+This is the target machine, which we will check an IPv6 connection against.
+.br 
+Example: ip6=3ffe::1
+.TP 
+.B fbip
+Fallback ip. ICPLD will double check the 
+connection status if the first ip is not 
+responding, by probing this ip
+Example: ip=192.168.0.2
+.TP 
+.B fbip6
+Same as above, but for the IPv6 connection monitoring
+.br 
+Example: fbip6=3ffe::2
+.TP 
+.B interval
+Will determine how often we will check for response from the machine specified
+with ip. The unit is seconds
+.br 
+Example: interval=10
+.TP 
+.B dinterval
+Determines how often we will check for an available connection after it has been marked 
+as unavailable. The unit is seconds
+.br 
+Example: dinterval=5
+.TP 
+.B pint
+Tells icpld how frequent it should send ICMP\-packets once it is in a checking cycle. This
+option is equivalent to ping \-i <double> and should not be confused with \fB\-interval\fR
+Default is one packet per second.
+.br 
+Example: pint=1.2
+.TP 
+.B iface
+Specifies which interface or (on some platforms) address to use for the checking. This is optional, and if excluded or left blank, the kernel default will be used. This only is useful for determining which trunk is down if you are on a multi\-connected system.
+.B logFile
+Specifies the location of the log file we will be stamping.
+.br 
+Example: logFile=~/.icpld/log
+.TP 
+.B logFile6
+Same as above, but for the IPv6 log. Note that 
+this option may be set identicaly to \fBlogFile\fR
+.br 
+Example: logFile6=~/.icpld/log
+.TP 
+.B htmlFile
+Same as \fBlogFile\fR, but the HTML formatted log.
+.br 
+Example: htmlFile=~/public_html/icpld.html
+.TP 
+.B htmlFile6
+Same as above, but the IPv6 log duplication. Note that this may be set identicaly to the 
+\fBhtmlFile\fR option
+.br 
+Example: htmlFile6=~/public_html/icpld.html
+.TP 
+.B daemonize
+ICPLD will either stay in the foreground, or fork to the background depending on the value of 
+daemonize. daemonize is of boolean type, meaning it is either 'true' or 'false'.
+.br 
+Example: daemonize=false
+.TP 
+.B nobeep
+If ICPLD is active in the foreground, it will generate a beep once the connection is back up 
+after downtime. To disable this, set nobeep to true. nobeep is of boolean type, meaning it
+is either 'true' or 'false'
+.br 
+Example: nobeep=true
+.TP 
+.B cmd4dn
+This is a system command which will be executed 
+whenever the IPv4 connection drops. This can be 
+useful when you wish to be alerted whenever your 
+connection goes down.
+.TP 
+.B cmd4up
+Same as above, but when the connection comes back up from downtime
+.TP 
+.B cmd6dn
+This is the same as \fBcmd4dn\fR but for the 
+IPv6 connection
+.TP 
+.B cmd6up
+Same as \fBcmd4up\fR but for the IPv6 connection
+.TP 
+.B errfile
+This option tells icpld where to save the log which contains the output of ping. The output
+is only written if the ping failed.
+.TP 
+.B errfile6
+Same as the above, but for the IPv6 connection
+.TP        
+.B Example of a valid and acceptable configuration file
+for users which does not have an IPv6 connection to monitor :
+
+# ICPLD config file (/etc/icpld.conf)
+
+ip=192.168.0.1
+
+fbip=192.168.0.2
+
+interval=9
+
+dinterval=5
+
+pint=1.0
+
+daemonize=true
+
+logFile=~/.icpld/log
+
+htmlFile=~/public_html/icpld.html
+
+errfile=~/.icpld/errors
+
+nobeep=false
+
+cmd4dn=play ~/mysounds/awwww.wav
+
+cmd4up=play ~/mysounds/yipee.wav
+
+.TP 
+.B Example of a valid configuration file for 
+monitoring both an IPv4 and an IPv6 connection:
+
+
+ip=192.168.0.1
+
+ip6=3ffe::1
+
+fbip=192.168.0.2
+
+fbip6=3ffe::2
+
+interval=9
+
+dinterval=5
+
+pint=1.0
+
+daemonize=true
+
+logFile=~/.icpld/log
+
+logFile6=~/.icpld/log
+
+htmlFile=~/public_html/icpld.html
+
+htmlFile=~/public_html/icpld\-v6.html
+
+errfile=~/.icpld/errors
+
+errfile6=~/.icpld/errors
+
+nobeep=false
+
+cmd4dn=play ~/mysounds/awwww.wav
+
+cmd4up=play ~/mysounds/yipee.wav
+
+cmd6dn=play ~/mysounds/awwww.wav
+
+cmd6up=play ~/mysounds/yipee.wav
+.SH "AUTHOR"
+.LP 
+Erik Ljungstrom <erik@ibiblio.org>

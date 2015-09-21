@@ -1,0 +1,485 @@
+From 1.1.4 to 1.1.5
+-------------------
+
+reset():	Changed struct from direct to dirent to comply with recent deprecation
+configure.in:	Removed --enable-ipv6 and made IPv6 support the default. Build with 
+		--disable-ipv6 to compile without.
+icpld.conf.sample:	Fixed typo and clarified a few things
+
+From 1.1.3 to 1.1.4
+-------------------
+
+contrib/:	Added init.d script from Klaus-J
+README:		Added credits
+configure.in:	Made IPv6 support the default, disabled with --disable-ipv6
+
+From 1.1.1 to 1.1.3
+-------------------
+
+* main():	Added reading from the popen() ptr in the fallback checking as well, seems
+		to be required on some systems.
+* reset():	Oops: Removed my trace output in -reset
+* parseargs():	Added -err and -err6 which displays the error log, much like the -log option
+* help():	Fixed typo at -errFile6
+* help():	Added -err and -err6
+* help():	Fixed typo
+* dispErrs():	New function and file, takes a mode and a string. The mode tells us if it's -err6 
+		or -err that's calling us, and the string holds the corresponding filename. 
+		Simple and straight forward
+* man/icpld.1:	Added -err and -err6 as well as some other minor adjustments
+* reset():	Slight modification to get rid of some redundancy
+* icpld.conf.sample: Rewrote some comments to clarify things which may have been a tad fuzzy
+
+
+From 1.1.0 to 1.1.1
+-------------------
+
+* killProc():	Fixed typo
+* killProc():	Replaced hard coded signal numbers in the output section with
+		it's definition
+* killProc():	Fixed output (-s now goes for -detach as well)
+* getCwdir():	Forgot to free 4096 bytes of allocated memory. This has been
+		fixed. I'm so sorry for wasting your precious resources with
+		my inadequate coding and I humbly ask for your forgiveness and ask
+		you to spend your newly found 4 kb wisely.
+* README:	Added credits to Tom Angle for providing the slackware packages
+* src/cuc.h:	Changed function definitions to include the variables errors and errors6
+		which holds the path to the errors file. The functions in question
+		are; checkInp, parseargs and parseconf
+* src/cuc.h:	Added inclusion of sys/param.h for Net- and OpenBSD to get MAXPATHLEN
+* parseconf():	Added config file option for errors file
+* parseargs():	Added argument option for errors file
+* help():	Added output for -errors and -errors6
+* main():	Now using std::ios::app instead of std::ios_base::app for backwards
+		compability with gcc
+* main():	Fixed the bug which made command line supplied paths not being expanded
+* getcwdir():	Fixed the NetBSD-bug by using the Darwin-specific code
+* reset():	This function has gone through a major remake (not to say rewrite)
+		mainly to comply better with older compilers 
+* logturn():	Rewrite and C:ified code for the above mentioned reason
+* wlogs():	Fixed the bug which wrote the logfile header to the IPv6 logfile
+		if you specified a logfile on the commnad line
+	
+
+From 1.0.9 to 1.1.0
+-------------------
+
+* signal_handler(): 	Added the SIGUSR1 (10) signal which will detach 
+			an icpld process currently running in the foreground
+* help(): 		Added the -detach option
+* parseArgs():		Same same 
+* killProc():		Added another argument to pass wanted signal to
+			be able to reuse the function for sending SIGUSR1
+			(the signal which detaches icpld) as well.
+			Also added various things needed for this to work
+* man/icpld.1		Updated version field
+* main():		Corrected a lingual mistake in the syslog message
+			concerning a failed pipe
+* getCwdir():		Removed the deleting of tempbuf, so it works on newer compilers
+			as well.
+
+	        The following is brown-paper-bag stuff
+* src/signals.cpp:	Altered a deprecated include (sys/signal.h -> csignal)
+			as well as added SIGUSR1 to the file header
+* src/cuc.h:		Altered deprecated includes (stdlib.h -> cstdlib, errno.h -> cerrno)
+* src/fork.cpp:		See above (assert.h -> cassert, signal.h -> csignal), also removed
+			duplicate inclusion of cstdio
+* src/getcwd.cpp:	See above (assert.h -> cassert)
+* src/displog.cpp:	See above (signal.h -> csignal)
+* src/Makefile.in/am:	Removed -Wmissing-prototype due to new gcc stuff
+
+From 1.0.8 to 1.0.9
+-------------------
+
+* man/icpld.1:	Updated version field
+* general:	Fixed the autoconf deal from 1.0.8, as well as solved the
+		no ping6 on solaris issue
+* TODO:		Removed entry about above mentioned issue
+* main():	Instead of hard coded ping commands, configures result is used
+
+From 1.0.6 to 1.0.8
+-------------------
+
+* help():	Changed the output of --help depending on wheter IPv6 support is 
+		enabled or not.
+* general:	Extended and clarified commenting
+* main():	MacOSX support is back! Altered the command variable as well as 
+		added the same "fix" as available for Solaris. This is the main
+		issue that lead to this release
+
+From 1.0.5 to 1.0.6
+-------------------
+
+* verip():	Altered the somewhat unclear output given if the IPv6 ip doesn't
+		resolve
+* verip():	Added more verbose error reporting
+* wlogs():	Added the startup info to the HTML exporting as well. Terrible that 
+		this hasn't generated a single bug-report! Shame on you 
+		open source community!
+* icpld.conf.sample:	Fixed spelling error
+* configure.in:	Fixed versioning
+* configure.in:	Moved several templates from acconfig.h to configure.in according
+		to the new ways of doing such things
+* man/icpld.1:	Fixed version in footer
+* README:	Added MacOS X as a "known to work" system
+* configure:	Fixed the versioning bug for non-IPv6 users. icpld now reports the
+		correct version
+* checkinp():	Fixed the bug which broke the HTML exporting. The variable wasn't
+		passed as a reference which always made it false in main()
+* checkinp():	Closing all open streams
+* checkinp():	Removed some redundant code. This is a forgotten chapter of icpld
+		which had grown out of proportion. It needed a cleanup badly. It was
+		incremented as the bug fixing grew, without iterating over previously
+		added code, hence containing duplets of a few checks etc.
+* checkinp():	Rephrased some user dialogs
+
+From 1.0.0 to 1.0.5
+-------------------
+
+* logTurn():	Instead of overwriting log.old with the newly turned log, it
+		names them log.0, log.1 etc. Also fixed poor intendation
+* reset():	When -reset is given, icpld also removes the above mentioned files
+* main():	The -status command does no longer show IPv6 info when running
+		in IPv4-only mode and vice versa. 
+* parseArgs():	Added -rotate as an 'alias' for -turn for no apparent reason
+* getCwd():	C++-ized and rewrote the memory allocation, to get prettier 
+		valgrind output :-)
+* BUGS:		Fixed typo
+* src/cuc.h:	Rewrote the PACKAGE redefinition
+* configure:	PACKAGE* definitions is now set properly
+
+From 0.6.3 to 1.0.0
+-------------------
+
+* main():	Added a workaround for the fact that a 'Broken pipe'-error
+		is produced unless the pointer which is used with popen()
+		is in some way used under Solaris. Version 0.6.3 unfortunately
+		broke Solaris support. But it should be working again.
+* src/cuc.h:	Rewrote the PACKAGE definition if HAVE_IPV6 is defined
+* parseargs():	Removed the failing-text, since icpld removes the pid-file
+		even if there's no process, the user might just as well
+		believe it was killed. (Thanks to Jameson Burt 
+		<jameson at coost dot com> for this somewhat obvious
+		suggestion
+* killProc():	Same as above. However, kill() errors other than ESRCH are
+		shown
+* killProc():	Closing the readPid stream
+* main():	Altered the text that's displayed if a pid-file exists.
+		It does no longer tell the user to remove ~ /.icpld/icpld.pid,
+		but to run icpld -quit instead (which does just that)
+* help():	Added -fbip6 after I realized this should have been added
+		in the 0.6.0 release
+man/icpld.1:	A lot of cosmetic fixes, especially line-breaking alterations.
+man/icpld.1:	Changed 'sound' to 'beeping', since people may be under the
+		impression that sound includes external processes spawned
+		when a connection goes up or down. 
+README:		Added Darwin as a "known to run icpld"
+TODO:		...
+
+From 0.6.1 to 0.6.3
+-------------------
+
+
+* parseconf():	Added cmd*up/dn parsing
+* dispLog():	Implemented the -m option. Huge changes here. See NEWS for 
+		further info on -m
+* dispLog():	Changed from reading binary to ios::in for MacOS X compliance
+* parseargs():	Added the -m option, which outputs the log in full, without 
+		breaks, in combination with -log
+* parseargs():	Added exit() calls after --help and "bad argument"
+		(see below in help())
+* parseargs():	Ugly (though working) fix which cancels config file options
+		if command line options are found. For instance, if icpld is
+		started with -ip, it won't use the IPv6 ip from the config file
+* killProc():	Same as above
+* signal_handler(): Added the SIGPIPE signal, even though it shouldn't get that far
+* signal_handler(): The return code is 0 for all signals except SIGPIPE
+* help():	Changed function return type to void
+* help():	Removed the exit() call, since the return code
+		should be different depending on wheter an unknown 
+		argument was given, or the user actually supplied 
+		--help. The return codes are 1 respectively 0
+* wrongArg():	This function is located in parseargs.cpp and is called
+		whenever an option which requires an argument, is provided 
+		without one. Exits with return code 1
+* logTurn():	Fixed the bug which made log turning impossible, since ~ 
+		wasn't expanded to the user's home dir. 
+* logTurn():	ICPLD now exits with return code 1 if the turn fails
+* main():	Added the calls for cmd*up/dn in the proper places
+* main():	Replaced a few if-statements with assertions since no
+		actions are needed if those tests fails
+* main():	Now deleting savepwd2 (yay 4 bytes of memory gained!)
+* main():	Removed the ugly fix for compilation warning without IPv6 
+		enabled
+* main():	Removed the redundant fread() calls <- OUCH!
+* main():	Removed the empty initializing of std::strings since this 
+		is the default on most (all?) platforms
+* main():	Removed some redundant permission checking which is done	
+		in checkinp() as well
+* main():	Changed exit() calls with raise() in order to clean up
+		properly from within signal_handler()
+* main():	Moved the "Forking into background as.." to daemonize() since we want the
+		pid of the forked child, not the to-be exited parent process 
+* daemonize():	The parent process now writes the PID of the child before
+		it _exit():s. This fixes the bug which had the wrong PID
+		written to the user (the one of the parent process, not the child)
+* getCwd():	Since MacOS X has some issues with my malloc(), there's been a
+		rewrite of getCwd() for MacOS, the old one stays for the rest of the os:s
+* cuc.h:	If ICPLD was configured with --enable-ipv6 the string
+		"+ipv6" is added to the output of --version. This was
+		mainly implemented in order to let me know that IPv6
+		is used if someone files a bug-report.
+* cuc.h:	Now including string.h or strings.h, depending on which
+		one exists. string.h has priority over strings.h if 
+		both exists. Purely out of portability reasons.
+* wlogs():	Fixed the condition checking, since a few situations
+		could suit several conditions
+* wlogs():	Rewrote the HTML section totally, less confusing now hopefully
+* man/icpld.1:	Added info on the -m switch
+* man/icpld.1:	Added cmd*up/dn information
+* src/fork.cpp:	Altered header quote
+* configure.in:	Added OS detection for MacOS X as well, in order to get
+		by the malloc() disagreement in getCwd()
+* icpld.conf.sample: Added cmd*up/dn examples
+
+From 0.6.0 to 0.6.1
+-------------------
+
+* general:	Extended source code commenting
+* README:	Altered 'release specific comments, upgraded 'obtaining
+		icpld' and fixed a typo in 'thanks to'
+* parseconf():	Removed the variable resetting. See below
+* parseargs():	Now you can use incomplete configuration files 
+		with -config. Before parseconf() is called, the
+		values are reset to default. IE you can have only
+		ip=192.168.0.2 and logFile=~/.icpld/log in your config, 
+		the rest will be taken from default
+* man/icpld.1	Fixed formatting error on the 'ip6' option
+* verip():	Fixed the compilation error under Solaris
+		(someone, please provide me a solaris testbed)
+* signals():	Changed integers to the definitions of the 
+		signals to avoid platform differences
+* main():	Fixed the bug which wouldn't set the time to
+		when the connection actually were broken
+* main():	Removed some debugging output
+* main():	Removed the warning given if the $HOME variable
+		is not found
+* main():	icpld does not give the warning about another process
+		running, if -s is specified, but dies silently
+* wlogs():	Fixed the bug which left the IPv6 ip out of the 
+		log generating if both IPv4 and IPv6 logging is set
+		to the same file
+* wlogs():	Code cleanup, redundant if-statements removed
+* firstr():	icpld now checks for, and creates the tot6 file, since
+		most users probably don't have it since the IPv6 
+		implementation came last version
+* reset():	Now icpld also removes IPv6 specific files
+		and restores them (see entry above)
+* reset():	Removed the availability checking for the html files
+		since messages due to ENOENT are suppressed anyway
+
+From 0.5.4 to 0.6.0
+-------------------
+
+* verip():	Total rewrite, now using gethostbyname2() except
+                when building on Solaris where getipnodebyname()
+* verip():	Added validity checking for IPv6 ips.
+* help():	Added all necessary arguments to help output
+* daemonize():	Added exception control for chdir() and open()
+* parseconf():	Removed excessive comments
+* parseconf(): 	Added the possibility of 'ipv6' in the config file
+* parseconf():	icpld now tells you which post is wrong, instead of
+		just which line it is on
+* checkinp():	New function and source file. This file contains all
+		the input checking which previously was made in main()
+* parseargs():	New function and source file. This file contains all
+		the argument parsing which previously was made in main()
+		This and the above change has cut memory usage upon 
+		compiling with optimization in half
+* main():	*Major* code cleanup. Excessive comments removed
+		comment formatting altered, code blocks removed
+		and replaced by extended use of fixPath() etc.
+* main():	Moved the passwd struct initiation into the else
+		block, since it's not used if $HOME is found
+* main():	Altered output given if the environment variable
+		$HOME fails to be used.
+* main():	Removed development output from command line parsing
+* main():	Fixed the path-related bug for -htmlfile as well
+* main():	Added permission checking for -logfile
+* main():	Altered various output. Mainly permission error messages
+* main():	The header of the HTML formatted log is now included
+		in HTML files specified with -htmlfile
+* main():	Removed all of the path-fixing code and pass the variables
+		through fixPath() instead
+* main():	Duplicated the original main loop into IPv6 as well
+* firstRun():	Added extended permission exceptions handling
+* help():	Altered return code to 2 upon wrong argument passed
+* fileCheck():	Removed exit() on ENP. Abortion is desided depending
+		on which file is being checked
+* fixPath():	*Major* code cleanup/rewrite. Removing unneccesary 
+		variables and code blocks
+* killProc():	icpld may now exit silently as well
+* killProc():	icpld now returns 1 if the PID file is missing when trying
+		to terminate a running(?) process
+* contrib/icpld.sh.sample:	Added the -s to the 'stop' option as well
+* man/icpld.1	Added the -4, -6 options, and updated the config file post
+* README:	Updated URL in the 'Getting icpld' section
+* README:	Rewrote smaller pieces of the Usage section to be
+		more understandable, as well as added notes on IPv6
+* README:	Added some comments on the new release
+* TODO:		Removed the post about IPv6 porting
+
+From 0.5.3 to 0.5.4
+-------------------
+
+* main():	Fixed the path-related bug with -logfile. 
+		icpld -logfile log works now. No absolute path
+		is longer necessary. See code comments for further info
+* main():	Altered output given when running in foreground
+* main():	Fixed the missing space in the definition of command2 
+		which led to an error in command2 (probing fallback ip)
+		(Couldn't have been that bad since it's been there since 
+		0.5.0 and no one noticed)
+* fork.cpp:	Altered quote in the file header
+* TODO		Removed the html template entry
+* README	Altered version number in the 'Getting icpld' section
+* BUGS		Removed the entry concerning the path issue (see above)
+* man/iclpld.1:	Changed path to configuration file in CONFIG FILE
+		as well as author email address
+
+From 0.5.2 to 0.5.3
+-------------------
+
+* verip():	Fixed the brown-paper-bag-bug, which resulted in several ips
+		not passing through the verification routine. 
+
+From 0.5.0 to 0.5.2
+-------------------
+
+* main():	Altered path to search for configuration file in, it is now
+		/usr/local/etc, rather than /etc. /etc is however kept as 
+		a fallback path, to keep backwards compability.
+* main():	Removed some of the code surrounding the -quit switch, since
+		that code segment got obsolete in the changes of killProc()
+		in version 0.4
+* main():       Added the -s option which makes icpld completely silent.
+                This was mainly added since it comes in handy when one is
+                starting icpld from startup-script, and don't want the
+                output.
+		Perhaps this should be made default, and a -verbose option
+		should be added to revert the default silent mode? Drop me
+		an e-mail with your 2 cents on this issue. 
+* main():	Fixed grammatic error in the log output. Totally -> Total
+* killProc():	ICPLD now returns 0 on signal 15 and 2. Thanks to 
+		Jonas Olsson for pointing this out.		
+* killProc():	Writing errors to stderr instead of stdout. Same as above
+* help():	Added the -s option and an explanation. Also removed trailing
+		dot after the explanation for the -d switch
+* fork.cpp:	Altered the quote in the file header (very clever words indeed)
+* fork.cpp:	Removed some outdated comments
+* General:	Added Jonas Olssons startup-scripts (see contrib/)
+* README:	Extended credits for Jonas Olsson to include startup-scripts
+* NEWS:		Added announcement for this version
+* fork.cpp	Altered Author email address
+
+From 0.4.5 to 0.5.0
+-------------------
+
+* parseConf():	Entered "1.0" as default 'pint' value. Was earlier set to ""
+		which resulted in pint becoming NULL if the ping option was missing
+		from the config file, which isn't acceptable.
+* main():	Altered the malloc() call in the if() statement to get
+		rid of the annoying warning message when running in a BSD environment,
+		about the high junk value. Also altered the free() segment.
+* README:	Changed author e-mail address
+* README:	Added credits for Martin Nilsson <orko@fearmuffs.net>
+* icpld.conf:	Removed example ips from the config file.
+
+From 0.4 to 0.4.5
+-----------------
+
+* main():	Removed output of number of arguments when none is 
+		given (forgotten debug flag)
+* main():	Added the -pint option. See manpage for further info
+* main():	Altered configuration parsing element from strncmp 
+		(confVar, "something", 9)
+		to strncmp (confVar, "something", strlen("something") 
+* main():	Expanded ./ to current directory in -logfile as well 
+		(necessary since fork() chdirs do /. Hence icpld 
+		-logfile ./log, ended up in /log, and not
+		/the/directory/icpld/was/started/from
+* main():	Corrected diverse spelling errors
+* main():	If getenv() fails (missing variables eg.) icpld will 
+		fall back to trying the passwd struct.
+* main():	If htmlFile is left empty, skip writeability checking 
+		to prevent "It appears as if you do not have the proper 
+		permissions to write to (note the void) Please gain 
+		proper user level, or alter the path and try again."
+* main():	Changed command availability statement to else if (argc <= 1)
+		Since else covers non existent or readable config files.
+		HUGE bug? Indeed.
+* main():	Applied existance checking on -config specified config files
+* main():	Moved the -reset option to a source file of its own 
+		(src/reset.cpp)
+* main():	Breaking if homedir is unretrieveable by any of the two
+		above methods (highly unlikely though)
+* help():	Added brief info on -pint in help function
+* reset():	Added errno display exception for ENOENT
+* reset():	Moved the deletion of html-file to before attempt to remove
+		~/.icpld, since the dir can't be removed if html file resides
+		within. 
+* dispLog():	Corrected spelling errors
+* general:	Moved the ip verification bit to a source file of its own
+* general:	Moved the help() function to a source file of its own
+* killProc():	Added perror() if kill() fails
+* signal_handler():	Added signal QUIT (3), and applied the 
+			getpwent() fallback method here as well.
+* AUTHORS:	Changed e-mail address for author
+* README:	Updated version and corrected some grammatics
+* README:	Refomratted linebreaks for terminal compability
+* INSTALL:	Added missing ) to last row (d0h)
+* man/icpld.1:	Updated manpage, included -pint information
+
+From 0.3 to 0.4
+---------------
+
+* main(): 	Checks for getenv() exception (lacking variables etc.)
+* logTurn(): 	Added permission control for reading and writing the log-file
+* fileCheck():  Moved to a source file of its own
+* fileCheck():  Added existance checking with stat(), and not just 
+		readability checking, but also permission.
+* main():	Extended checking of 'ping' permissions, to 'command 
+		not found' as well as 'permission denied'
+* main():	Added if (logFile == htmlFile).. Just in case
+* main():	Fixed ./ and ~ extension for -config argument as well
+* general:	ICPLD now marks a connection as available if the 
+		fallback ip replies when down, and not only the 
+		main ip (horrible bug, I know (but hey, check the 
+		version numbers))
+* general:	Fixed some general and standard English language issues	
+* general:	Removed the bug which generated the following confusement:
+
+		Fallback ip 127.0.0.1 seems available. Connection back up!
+		Got ICMP reply from 192.168.0.2.. Connection available!  
+		<- Even though that ip was still down
+		Sending ICMP request to 192.168.0.2...
+		192.168.0.2 isn't responding. Trying fallback ip...
+
+From 0.1 to 0.3
+----------------
+
+* main():	Added stamp to HTML log
+* main():	Altered HTML formatting
+* main(): 	Command line parsing; 
+   	  	Fixed bug which made -log read the logfile specified in the
+	 	config file, even if -logfile was given at the command line, 
+	  	unless -log came after -logfile,
+* main(): 	Rewrote the get_current_dir_name() to comply to even more compilers.
+ 	  	Even them old pesky ones.
+* main(): 	Fixed the directory confusement if one for example did 
+		-logfile ./log.	Since the function firstr() 
+		chdirs to ~/.icpld pwd was dito. Hence ./log  actually 
+		meant ~/.icpld/log anyways. 
+* main(): 	Fixed the html formatting, even on files set by 
+		-htmlfile or from the config.
+

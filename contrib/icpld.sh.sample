@@ -1,0 +1,18 @@
+#!/bin/sh
+case "$1" in
+	start)
+		if [ -x /usr/local/bin/icpld ]; then
+			/usr/local/bin/icpld -s && echo -n " icpld"
+		fi
+		;;
+	stop)
+		if [ -x /usr/local/bin/icpld ]; then
+			/usr/local/bin/icpld -s -quit && echo -n " icpld"
+		fi
+		;;
+	*)
+		echo "Usage: $0 {start|stop}" >&2
+		exit 64
+		;;
+esac
+	

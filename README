@@ -1,0 +1,158 @@
+===============
+Obtaining ICPLD
+===============
+
+If you are running FreeBSD, icpld is available through the
+porting system.
+
+ICPLD is currently available from 
+http://www.ibiblio.org/icpld/icpld-1.1.5.tar.bz2 .
+It is also mirrored at http://www.northernmost.org/icpld/
+
+ICPLD is mirrored at other locations, but for the 
+latest official release, stick to one of the two above URLS. I strongly dislike
+recieving e-mails concerning months old versions.
+
+===============
+What is ICPLD?
+===============
+
+ICPLD aka. Internet Connection Performance Logging Daemon (nifty name, huh?)
+is a daemon which, by sending ICMP requests to an ip of your 
+choice, controls whether your networking connection is up or not. As of version
+0.6.0 ICPLD supports both IPv4 and IPv6 networks.
+It will log any failed attempts to contact the peering
+machine, and stamp a log as soon as a reply is received. 
+It keeps track of when the connection was unavailable, as well as for how 
+long. Both totally down, as well as at each occasion of interrupted connection.
+
+=================
+Installing ICPLD 
+=================
+
+See INSTALL
+
+====================
+Where will it work?
+====================
+
+ICPLD is known to build and function properly at the following OS's 
+and platforms:
+
+Linux
+FreeBSD
+NetBSD
+OpenBSD
+Solaris
+MacOSX
+
+And probably most other somewhat normal UNIX like systems. 
+You got it running on some alien OS? Contact me, I'd love to know.
+
+================================
+How to use ICPLD & How it works
+================================
+
+I wrote this program, due to issues with my ISP. It was during a period 
+of time incredibly unstable, and didn't perform well at all. So before I 
+called them up, I let ICPLD run a few days. Thanks to this information,
+rather than "It goes down every now and then, and stays 
+down for a while", they could see patterns, and solve the issue rather 
+quickly. Well, to the topic; It's recommended to run ICPLD towards a 
+host that's aware of this, as constant ICMP requests might be less 
+appreciated by some administrators. This is when the -dinterval switch 
+comes in handy, as you can use another interval for checking, once 
+the connection is down. And when a working connection is 
+detected, icpld will fall back to either the default interval, or 
+the one specified with -interval. -dinterval should, however, NOT be 
+lower than 3 seconds, as the timeout for two ICMP packets is ~3 
+seconds. Setting dinterval lower, will spawn a pinging process, faster 
+than the old one has been terminated.
+
+When reading the following, note that IPv4 is the "normal" ip standard of today.
+For you who is not in any way using IPv6, or even knowing what it is 
+may completely disregard everything concerning this. Just read IPv4 as 'a normal ip' 
+and you will be all right.
+
+The normal way to use ICPLD for IPv4 without the configuration file is as follows:
+icpld -ip ip.of.the.target -fbip ip.of.another.target
+
+The equivalent use with IPv6 would be:
+icpld -ip6 ip.of.the.target -fbip6 ip.of.another.target
+
+(Note that all operations that is available with IPv4 is available
+ with IPv6 as well, simply add '6' at the end of the option.
+ For instance, if you want to specify another log file for the
+ IPv6 monitoring, you add the -logfile6 switch. Alternatively
+ you specify it in the config file with the logFile6= option. 
+ See manpage for further information concerning the use of 
+ different options)
+
+This will fork icpld to the background, and send an ICMP request every 
+10 seconds to ip.of.the.target. If a reply isn't received within an 
+appropriate amount of time from either the ip or the fbip, the 
+connection is considered broken and a stamp with the time and date is 
+put in the log.
+
+The log may be read by executing 
+icpld -log
+The log file is by default stored in ~/.icpld/log
+
+Another example would be:
+icpld -ip 192.168.0.1 -fbip 192.168.0.2 -ip6 ::1 -interval 15 -dinterval 5
+Which would check if 192.168.0.1 and 192.168.0.2 is available every 
+15 seconds. If they are considered down (doesn't reply), icpld will 
+try every 5 seconds. It would perform the same operations with the IPv6 
+ip, and would log to the same file (~/.icpld/log)
+
+It is however recommended to use a configuration file since 
+it saves a lot of time on regular usage.
+
+Please note that the log will not be 100% accurate, due to 
+timeout time and interval (the lower the interval, the higher accuracy 
+you will obtain, as well as higher traffic). It is roughly a few 
+seconds differing at each occasion. 
+
+There are several other options available, please 
+see 'icpld --help', or 'man icpld'  for further information on these.
+
+==========================================
+I have; found a bug, had an idea, a tips,
+had enough of you and want to flame you.
+==========================================
+
+Feedback is always welcomed by most developers. 
+Please see http://northernmost.org/new/contact.php
+
+==========================
+Release specific  comments
+==========================
+
+See NEWS
+
+===========
+Thanks to
+===========
+
+Jonas Olsson <impcat@fearmuffs.net> for general ideas, testing, lending
+me OpenBSD machines as well as writing the startup-script for 
+the FreeBSD-port (found in contrib/ )
+
+Martin Nilsson <orko@kladdkaka.nu> for help with general ideas (and complaints :-)
+
+Léon Keijser <l.keijser@chello.nl> for the code which counts the number of interruptions
+
+Pete Wilson <pete@pwilson.net> for the code base thanks to which the -log option work as it does
+(see src/displog.cpp footer and source comments for further info)
+
+Elliott Lockwood <elliot_ca@hotmail.com> for the OpenBSD port
+
+Hans Ulrich Niedermann <gp@n-dimensional.de> (#devtools on irc.freenode.net) for the tricky parts of 
+configure.in
+
+Tom Angle <tangle@hclg.org> for providing the slackware package 
+(http://www.ibiblio.org/icpld/download/binaries/slackware)
+
+Klaus-J. Luksch <cyberclaus@gmx.net> for the init script for SuSe (found in contrib/ )
+ 
+Anonymous and slightly excentric person for the contrib/icpld.initd script

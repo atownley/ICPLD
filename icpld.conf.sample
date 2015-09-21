@@ -1,0 +1,121 @@
+ 
+# ICPLD config file.
+# All options are set to boring, though reasonable,
+# defaults. These should work for most users. The most 
+# vital setting to change is that of ip or ip6.
+#
+# Note that icpld can check two connections at once, one
+# IPv4 connection, and one IPv6. One of the two options
+# 'ip' or 'ip6' has to be set for icpld to start. 
+# If you wish to disable any of the two, just leave that
+# option empty or comment it out.
+
+ 
+# IPv4 address to send ICMP requests to. This field is required, unless you specify
+# an ip on command line, by supplying the -ip argument or set an IPv6 address. 
+# This variable may also take a host name
+
+ip=192.168.0.1
+
+# Fallback ip. This is the ip we will probe for confirmation
+# if 'ip' isn't responding. Leave emtpy to disable double checking.
+# If not, you *really* want to change this
+
+fbip=127.0.0.1
+
+# Same as 'ip' but for IPv6. Leave this empty unless you have
+# a configured IPv6 connection and configured icpld with
+# --enable-ipv6
+
+#ip6=
+
+# Same as 'fbip' but for IPv6. Leave this empty unless you
+# have a working IPv6 connection.
+
+#fbip6=
+
+
+# How often will we check for replies?
+
+interval=8
+
+# How often will we check for replies if the connection is down?
+# Can be lower than interval, since it won't load the target system.
+
+dinterval=5
+
+# Normally 'ping' sends one packet per second, with this option 
+# you can change that frequence. Note that this is how often packets
+# should be sent once the pinging sequence has commenced, and NOT 
+# to be confused with 'interval'
+#
+# Also note that only a superuser, such as root, can set this value to 
+# lower than or equal to 0.2 seconds. 1.0 is a reasonable default.
+
+pint=1.0
+
+# Which file should contain the log for IPv4?
+
+logFile=~/.icpld/log
+
+# The log is copied and converted into HTML format. This option
+# specifies where the HTML formatted log will be located.
+# Leave empty to disable log duplicating. 
+
+htmlFile=~/.icpld/icpld.html
+
+# This is the log to which we will log failures on a
+# IPv6 connection. Comment out to use the same logfile
+# for both IPv4 and IPv6
+
+#logFile6=
+
+# Same as htmlFile, but for the IPv6 log
+
+#htmlFile6=
+
+# Which interface shall we use to send the signals?
+
+#iface=eth0
+# or on some platforms (such as Linux), which address
+#iface=192.168.0.1
+
+# Should we fork into background? true or false
+
+daemonize=true
+
+# Should we generate a beeping sound when the connection comes up?
+# The beep is only generated if ICPLD runs in the foreground
+
+nobeep=true
+
+# This is a system command which will be executed when the IPv4
+# connection is broken. This setting is optional and can be
+# used to alert you whenever the status of your connection(s)
+# changes. For instance, you can chose to play a sound when 
+# the connection comes back up after down time.
+
+cmd4dn=aplay /home/erik/sounds/grunt.wav
+
+# Same as above, but for when the connection comes back up
+
+cmd4up=aplay /home/erik/sounds/yipee.wav
+
+# Same as cmd4dn but for the IPv6 connection
+
+#cmd6dn=
+
+# Same as cmd4up but for the IPv6 connection
+
+#cmd6up=
+
+# This file will contain the output of ping generated
+# when we've failed to receive a reply, good for 
+# debugging purposes
+ 
+errfile=~/.icpld/error
+
+# Same as above, but for the IPv6 connection
+
+#errfile6=~/.icpld/error
+

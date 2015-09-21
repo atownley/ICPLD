@@ -1,0 +1,23 @@
+
+Standard procedure;
+
+./configure
+make
+as root;
+make install
+
+If you don't plan on using icpld with IPv6 networks, note that you can
+run ./configure --disable-ipv6 to skip any IPv6 specific code to be compiled.
+
+If you lave this out - configure first looks for the ping6 binary, if it fails 
+to find that (it most likely will if you are on a solaris or non-IPv6 enabled system) 
+it will assume ping -A inet6
+If, however, this is wrong as well, not only do you have a slightly out of the ordinary 
+system but you would also have to override configure's setting by 
+doing ./configure --enable-ipv6 PING6="/foo/bar -6"
+
+Now is a good time to edit icpld.conf.sample and copy it
+to /usr/local/etc/icpld.conf . See 'man icpld' for further 
+information on the config file. If you lack permissions to put
+files in /usr/local/etc, you may put it anywhere else, and specify
+the path with the -config argument.

@@ -1,0 +1,19 @@
+Begin4
+Title: icpld
+Version: 1.1.5
+Entered-date: 2008-07-29
+Description: Keeps track of a networking connection. It forks into background and
+logs when and for how long a connection is unavailable. Logs into plain text, as well
+as optionally duplicates the log into HTML format. Both IPv4 and IPv6 networks are supported.
+Additionally icpld can be set to execute a command whenever the status of a connection
+changes, which may be useful to alert users etc.
+Keywords: icpld, connection monitor, network monitor, logging, ipv6
+Author: Erik Ljungstrom <erik@ibiblio.org>
+Maintained-by: Erik Ljungstrom <erik@ibiblio.org>
+Primary-site: http://icpld.northernmost.org
+Alternate-site: http://northernmost.org/icpld
+Original-site: http://icpld.northernmost.org
+Platforms: Linux, *BSD, Solaris, Darwin, just about any somewhat POSIX compatible platform.
+Copying-policy: BSD license (original)
+End
+

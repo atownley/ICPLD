@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# NOT TESTED
+#
+# This script assumes a configuration file exists as /usr/local/etc/icpld.conf
+# description: icpld checks for interrupted networking and stamps a log whenever \
+# the connection is determined to be down
+# processname: icpld
+# config: /usr/local/etc/icpld.conf
+
+# Arguments to be sent to icpld at startup time
+ARGS= -s
+
+#
+STOPARGS= -s
+
+CONFIG=/usr/local/etc/icpld.conf
+
+RETVAL=0
+
+start() {
+	echo -n $"Starting up ICPLD daemon: "
+	/usr/local/bin/icpld $ARGS
+	RETVAL=$?
+	echo
+}
+
+stop() {
+	echo -n $"Shutting down ICPLD daemon: "
+	/usr/local/bin/icpld -quit $STOPARGS
+	RETVAL=$?
+	echo
+}
+
+dostatus() {
+	/usr/local/bin/icpld -status
+}
+
+restart() {
+	stop
+	start
+	RETVAL=$?
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+	dostatus
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: icpld.init {start|stop|status|restart|reload}"
+	exit 1
+esac
+
+exit $RETVAL

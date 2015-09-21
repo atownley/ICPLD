@@ -1,0 +1,5 @@
+Even if icpld is compiled without IPv6 support, IPv6 related
+things passes the configuration file parsing. I do however not consider
+this a bug, but rather a feature. It is easily fixed, but I fail
+to see why it would be necessary. So please, no more "bug reports" 
+on this issue.
